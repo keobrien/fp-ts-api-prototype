@@ -1,0 +1,20 @@
+{
+  "name": "prototype-api",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "netlify dev",
+    "test": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@netlify/functions": "^1.0.0",
+    "fp-ts": "^2.12.2",
+    "netlify-cli": "^10.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.3"
+  }
+}
