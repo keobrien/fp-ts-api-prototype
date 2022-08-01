@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "netlify dev",
-    "test": ""
+    "test": "newman run tests/FP.postman_collection.json --environment tests/Local.postman_environment.json --globals tests/workspace.postman_globals.json"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "netlify-cli": "^10.13.0"
   },
   "devDependencies": {
-    "@types/node": "^18.6.3"
+    "@types/node": "^18.6.3",
+    "newman": "^5.3.2"
   }
 }

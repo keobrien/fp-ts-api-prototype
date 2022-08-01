@@ -1,0 +1,21 @@
+{
+	"id": "6baf9439-4934-4dde-8877-3ef8cf76e861",
+	"values": [
+		{
+			"key": "tmp_access_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "tmp_refresh_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2022-08-01T04:31:56.767Z",
+	"_postman_exported_using": "Postman/9.25.2"
+}

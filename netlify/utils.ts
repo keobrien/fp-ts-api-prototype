@@ -1,15 +1,19 @@
 import { either, option } from "fp-ts";
-import { tryCatch, Either, left, right, match } from "fp-ts/lib/Either";
+import { tryCatch, Either, left, right, match, chain, map } from "fp-ts/lib/Either";
 import * as C from "fp-ts/lib/Console";
+import * as O from "fp-ts/lib/Option";
+import * as E from "fp-ts/lib/Either";
 import { Errors, respond400 } from "./http/responses";
 import { Event } from "@netlify/functions/dist/function/event";
+import { pipe } from "fp-ts/lib/function";
 
 export const mapLog = (x: any) => { C.log(x)(); return x; };
+export const log = (value: any) => { console.info(value); return value; }
 
-const attr = (path: string) => (object: Object) => {
+export const attr = (path: string) => (object: Object) => {
     return path.split('.').reduce((parts: any, part: string): any => {
-        return (parts && (parts[part] !== undefined)) ? parts[part] : option.none;
-    }, object)
+        return (parts && (parts[part] !== undefined)) ? parts[part] : undefined;
+    }, object);
 }
 
 export const maybeAttr = (path: string) => (object: Object) => {
@@ -44,3 +48,26 @@ export const multipleValidations = (checks: Validation) => (response: Function) 
 
 export const multipleValidations400 = (checks: Validation) =>
     multipleValidations(checks)(respond400);
+
+
+const hasRequiredField = (field: string) => (event: Event) =>
+    pipe(
+        event,
+        maybeAttr(`body.${field}`),
+        either.fromOption(() => [{ key: 'missing-field', field: field, developer_details: `Request is missing required field: ${field}.` }]),
+    );
+
+export const isRequiredFieldType = (field: string) => (type: string) => (event: Event) =>
+    pipe(
+        event,
+        hasRequiredField(field),
+        chain(value => typeof value === type
+            ? right(event)
+            : left([{ key: 'incorrect-field-type', field: field, developer_details: `Field is is not a '${type}', it is a '${typeof value}' with the value ${JSON.stringify(value)}.` }])),
+        match(
+            errors => left(errors),
+            _ => right(event)
+        )
+    );
+
+export const hasRequiredStringField = (field: string) => isRequiredFieldType(field)('string')

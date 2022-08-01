@@ -21,6 +21,7 @@ const respond = (statusCode:number) => (content:Object): Response => {
 export declare type Error = {
     key: string,
     developer_details: string;
+    field?: string,
 }
 export declare type Errors = Array<Error>;
 
@@ -36,4 +37,4 @@ export const respond200 = respond(200);
 export const respond400 = respondWithErrors(400);
 export const respond401 = respondWithErrors(401);
 export const respond404 = respondWithErrors(404);
-export const respond404NotFound = respondWithErrors(404)([{ key: 'not-found', developer_details: 'API endpoint not found.' }]);
+export const respond404NotFound = respondWithErrors(404)([{ key: 'api-not-found', developer_details: 'API endpoint not found.' }]);
