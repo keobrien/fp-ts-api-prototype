@@ -1,2 +1,3 @@
 /api/v1/auth-login /.netlify/functions/auth-login 200
+/api/v1/auth-register /.netlify/functions/auth-register 200
 /api/v1/* /.netlify/functions/404 200

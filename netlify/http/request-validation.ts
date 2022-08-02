@@ -1,10 +1,10 @@
 import { either } from "fp-ts";
 import * as O from 'fp-ts/Option';
-import { chain, Either, match } from "fp-ts/lib/Either";
+import { chain, match } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { respond400, respond404, respond404NotFound, Response } from "./responses";
+import { respond400, respond404NotFound, Response } from "./responses";
 import { Event } from "@netlify/functions/dist/function/event";
-import { mapLog, maybeAttr } from "../utils";
+import { maybeAttr } from "../utils";
 
 declare type Handler = () => Response;
 

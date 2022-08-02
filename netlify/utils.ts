@@ -1,8 +1,6 @@
 import { either, option } from "fp-ts";
 import { tryCatch, Either, left, right, match, chain, map } from "fp-ts/lib/Either";
-import * as C from "fp-ts/lib/Console";
-import * as O from "fp-ts/lib/Option";
-import * as E from "fp-ts/lib/Either";
+import * as A from "fp-ts/lib/Array";
 import { Errors, respond400 } from "./http/responses";
 import { Event } from "@netlify/functions/dist/function/event";
 import { pipe } from "fp-ts/lib/function";
@@ -28,23 +26,16 @@ export const decodeBody = (event: Event) =>
         error => respond400([{ key: 'request-body-json', developer_details: `Unable to parse request body json: ${error}` }])
     );
 
-declare type Validation = Array<(a: any) => Either<Errors, Event>>;
+declare type Validation = Array<(a: any) => Either<Errors, any>>;
 
-const runValidations = (checks: Validation) => (input: any) =>
-    checks
-        .map((check: Function) => check(input))
-        .map(match(
-            (errors: Errors) => errors,
-            (_: any): Errors => [],
-        ))
-        .reduce((result: Errors, item: Errors) => [...result, ...item]);
-
-export const multipleValidations = (checks: Validation) => (response: Function) => (input: any) => {
-    const result = runValidations(checks)(input);
-    return result.length > 0
-        ? left(response(result))
-        : right(input);
-}
+export const multipleValidations = (checks: Validation) => (response: Function) => (input: any) => 
+    pipe(
+        checks,
+        A.flap(input),
+        A.lefts,
+        A.flatten,
+        result => result.length > 0 ? left(response(result)) : right(input)
+    );
 
 export const multipleValidations400 = (checks: Validation) =>
     multipleValidations(checks)(respond400);
@@ -70,4 +61,26 @@ export const isRequiredFieldType = (field: string) => (type: string) => (event: 
         )
     );
 
-export const hasRequiredStringField = (field: string) => isRequiredFieldType(field)('string')
+export const hasRequiredStringField = (field: string) => isRequiredFieldType(field)('string');
+
+export const isFieldStringMatch = 
+    (pattern: RegExp, errorDetails?: object, errorKey: string) => 
+        (field: string) => 
+            (event: Event) =>
+                pipe(
+                    event,
+                    hasRequiredStringField(field),
+                    chain(event => right(attr(`body.${field}`)(event))),
+                    chain(value => 
+                        value.match(pattern) !== null
+                            ? right(event)
+                            : left([{
+                                key: errorKey ? errorKey :'incorrect-format',
+                                developer_details: `The field '${field}' did not match the format '${pattern}' for the value '${value}'`,
+                                field,
+                                error_details: errorDetails}])
+                    )
+                );
+
+export const isPasswordMatch = (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
+    isFieldStringMatch(pattern, errorDetails, errorKey)('password');

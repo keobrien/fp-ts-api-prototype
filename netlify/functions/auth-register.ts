@@ -3,8 +3,9 @@ import { chain, match, right } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { respond200 } from "../http/responses";
 import { httpMethods, isJson } from "../http/request-validation";
-import { decodeBody, hasRequiredStringField, multipleValidations400 } from "../utils";
+import { decodeBody, hasRequiredStringField, isPasswordMatch, multipleValidations400 } from "../utils";
 import { findUser } from "../users/users";
+
 
 const handler: Handler = async (event, _) =>
     httpMethods(event, {
@@ -15,7 +16,11 @@ const handler: Handler = async (event, _) =>
             chain(
                 multipleValidations400([
                     hasRequiredStringField('username'),
-                    hasRequiredStringField('password'),
+                    isPasswordMatch(/[a-z]/, { min: 1 }, 'password-lower'),
+                    isPasswordMatch(/[A-Z]/, { min: 1 }, 'password-upper'),
+                    isPasswordMatch(/[0-9]/, { min: 1 }, 'password-number'),
+                    isPasswordMatch(/[^a-zA-Z0-9\s]/, { min: 1 }, 'password-special-character'),
+                    isPasswordMatch(/.{15,30}/, { min: 15, max: 30 }, 'password-length'),
                 ])
             ),
             chain(findUser),
