@@ -1,5 +1,5 @@
-import { flow, pipe } from "fp-ts/lib/function";
-import { mapLog } from "../utils";
+import { pipe } from "fp-ts/lib/function";
+import { Errors } from "../types";
 
 export declare type Response = {
     statusCode: number;
@@ -17,14 +17,6 @@ const respond = (statusCode:number) => (content:Object): Response => {
         }),
     };
 }
-
-export declare type Error = {
-    key: string,
-    developer_details: string;
-    field?: string,
-    error_details?: object
-}
-export declare type Errors = Array<Error>;
 
 const respondWithErrors = (statusCode:number) => (errors:Errors) => 
     pipe(

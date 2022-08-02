@@ -3,8 +3,9 @@ import { chain, match, right } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { respond200 } from "../http/responses";
 import { httpMethods, isJson } from "../http/request-validation";
-import { decodeBody, hasRequiredStringField, isPasswordMatch, multipleValidations400 } from "../utils";
+import { decodeBody } from "../utils";
 import { findUser } from "../users/users";
+import { hasRequiredStringField, isPasswordMatch, multipleValidations400 } from "../validation/validation";
 
 
 const handler: Handler = async (event, _) =>

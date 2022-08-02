@@ -4,7 +4,7 @@ import { chain, match } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { respond400, respond404NotFound, Response } from "./responses";
 import { Event } from "@netlify/functions/dist/function/event";
-import { maybeAttr } from "../utils";
+import { maybeObjKey } from "../utils";
 
 declare type Handler = () => Response;
 
@@ -17,7 +17,7 @@ interface Handlers {
 
 export const isJson = (event: Event) =>
     pipe(
-        maybeAttr('headers.content-type')(event),
+        maybeObjKey('headers.content-type')(event),
         O.chain(type => type === 'application/json' ? O.some(type) : O.none),
         either.fromOption(
             () => respond400([{ 
