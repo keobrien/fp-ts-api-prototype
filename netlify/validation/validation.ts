@@ -6,7 +6,20 @@ import { maybeObjKey, objKey } from "../utils";
 import { pipe } from "fp-ts/lib/function";
 import { Validation } from "../types";
 
-export const multipleValidations = (checks: Validation) => (response: Function) => (input: any) => 
+export {
+    // utils
+    multipleValidations,
+    multipleValidations400,
+    // generic fields
+    hasRequiredField,
+    isRequiredFieldType,
+    hasRequiredStringField,
+    isFieldStringMatch,
+    // passwords
+    isPasswordMatch,
+}
+
+const multipleValidations = (checks: Validation) => (response: Function) => (input: any) => 
     pipe(
         checks,
         A.flap(input),
@@ -15,7 +28,7 @@ export const multipleValidations = (checks: Validation) => (response: Function) 
         result => result.length > 0 ? left(response(result)) : right(input)
     );
 
-export const multipleValidations400 = (checks: Validation) =>
+const multipleValidations400 = (checks: Validation) =>
     multipleValidations(checks)(respond400);
 
 
@@ -26,7 +39,7 @@ const hasRequiredField = (field: string) => (event: Event) =>
         either.fromOption(() => [{ key: 'missing-field', field: field, developer_details: `Request is missing required field: ${field}.` }]),
     );
 
-export const isRequiredFieldType = (field: string) => (type: string) => (event: Event) =>
+const isRequiredFieldType = (field: string) => (type: string) => (event: Event) =>
     pipe(
         event,
         hasRequiredField(field),
@@ -39,9 +52,9 @@ export const isRequiredFieldType = (field: string) => (type: string) => (event: 
         )
     );
 
-export const hasRequiredStringField = (field: string) => isRequiredFieldType(field)('string');
+const hasRequiredStringField = (field: string) => isRequiredFieldType(field)('string');
 
-export const isFieldStringMatch = 
+const isFieldStringMatch = 
     (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
         (field: string) => 
             (event: Event) =>
@@ -60,5 +73,5 @@ export const isFieldStringMatch =
                     )
                 );
 
-export const isPasswordMatch = (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
+const isPasswordMatch = (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
     isFieldStringMatch(pattern, errorDetails, errorKey)('password');
