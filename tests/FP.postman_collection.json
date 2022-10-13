@@ -448,7 +448,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'unavailalbe-content-type')).to.equal(true);",
+											"    pm.expect(jsonData.content.errors.some(e => e.key === 'unavailable-content-type')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -970,7 +970,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'unavailalbe-content-type')).to.equal(true);",
+											"    pm.expect(jsonData.content.errors.some(e => e.key === 'unavailable-content-type')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"

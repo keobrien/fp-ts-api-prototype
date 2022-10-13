@@ -21,7 +21,7 @@ export const isJson = (event: Event) =>
         O.chain(type => type === 'application/json' ? O.some(type) : O.none),
         either.fromOption(
             () => respond400([{ 
-                key: 'unavailalbe-content-type',
+                key: 'unavailable-content-type',
                 developer_details: `The content type requested is not available.`
             }])
         ),
