@@ -1,16 +1,14 @@
 import { Handler } from "@netlify/functions";
-import { chain, match, right } from "fp-ts/lib/Either";
+import { chain, left, match, right } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { respond200 } from "../http/responses";
-import { httpMethods, isJson } from "../http/request-validation";
-import { decodeBody } from "../utils";
-import { findUser } from "../users/users";
-import { hasRequiredStringField, multipleValidations400 } from "../validation/validation";
+import { decodeBody, handleHttpMethods, hasRequiredStringField, isJson, multipleValidations400, objKey, respond200, respond401, validateApiKey } from "../utils/utils";
+const users = require("../data/users.json");
 
-const handler: Handler = async (event, _) =>
-    httpMethods(event, {
+export const handler: Handler = async (event, _) =>
+    handleHttpMethods(event, {
         post: () => pipe(
             right(event),
+            chain(validateApiKey),
             chain(isJson),
             chain(decodeBody),
             chain(
@@ -27,4 +25,14 @@ const handler: Handler = async (event, _) =>
         )
     });
 
-export { handler };
+const findUser = (event: Event) =>{
+    const username = objKey('body.username')(event);
+    const password = objKey('body.password')(event);
+    const user = users.find(user => user.username === username && user.password === password);
+    return user
+        ? right(user)
+        : left(respond401([{
+            key: 'user-not-found',
+            developer_details: `username "${username}" and password combination not found.`
+        }]));
+}

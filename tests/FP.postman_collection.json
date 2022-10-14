@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "ee75e0b3-2fda-4228-aa5b-9bb1b4acbde2",
 		"name": "FP",
+		"description": "Example",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "7673838"
 	},
@@ -13,7 +14,7 @@
 					"name": "errors",
 					"item": [
 						{
-							"name": "auth-login missing API",
+							"name": "auth-login missing API key",
 							"event": [
 								{
 									"listen": "test",
@@ -21,30 +22,78 @@
 										"exec": [
 											"var jsonData = pm.response.json();",
 											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(404);",
+											"pm.test(\"HTTP Status\", function() {",
+											"    pm.response.to.have.status(401);",
 											"    pm.response.to.be.error;",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'api-not-found')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-api-key')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{API}}auth-login",
+									"host": [
+										"{{API}}auth-login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "auth-login wrong API key",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"",
+											"pm.test(\"HTTP Status\", function() {",
+											"    pm.response.to.have.status(401);",
+											"    pm.response.to.be.error;",
+											"    pm.response.to.be.withBody;",
+											"    pm.response.to.be.json;",
+											"});",
+											"",
+											"pm.test(\"response contain correct info\", function() {",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'invalid-api-key')).to.equal(true);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "WRONG",
 										"type": "text"
 									}
 								],
@@ -78,7 +127,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'user-not-found')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'user-not-found')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -91,6 +140,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -124,8 +178,8 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -138,6 +192,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -171,7 +230,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -184,6 +243,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -217,7 +281,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'username')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'username')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -230,6 +294,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -263,7 +332,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -276,6 +345,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -309,7 +383,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'password')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'password')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -322,6 +396,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -355,7 +434,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -368,6 +447,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -401,7 +485,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'request-body-json')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'request-body-json')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -414,6 +498,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -448,7 +537,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'unavailable-content-type')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'unavailable-content-type')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -461,6 +550,11 @@
 									{
 										"key": "Content-Type",
 										"value": "application/pdf",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],
@@ -497,8 +591,8 @@
 									"});",
 									"",
 									"pm.test(\"response contain correct info\", function() {",
-									"    pm.expect(jsonData.content.access_token).to.be.a('string');",
-									"    pm.expect(jsonData.content.errors).to.equal(undefined);",
+									"    pm.expect(jsonData.data.access_token).to.be.a('string');",
+									"    pm.expect(jsonData.data.errors).to.equal(undefined);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -511,6 +605,11 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{API Key}}",
 								"type": "text"
 							}
 						],
@@ -530,62 +629,659 @@
 			]
 		},
 		{
-			"name": "Auth Register",
+			"name": "/users",
 			"item": [
 				{
-					"name": "errors",
+					"name": "POST - Register",
 					"item": [
 						{
-							"name": "auth-register missing API",
-							"event": [
+							"name": "errors",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(404);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'api-not-found')).to.equal(true);",
-											"});"
+									"name": "auth-register missing API key",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 401\", function() {",
+													"    pm.response.to.have.status(401);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-api-key')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
 										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
+								{
+									"name": "auth-register wrong API key",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 401\", function() {",
+													"    pm.response.to.have.status(401);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'invalid-api-key')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "WRONG",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register multiple missing fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register missing username & pass",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
+													"",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"a\": true\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register username type",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'username')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey"
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\": true\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register unique username",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"    pm.expect(jsonData.server_info.version).to.be.a('string');",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(",
+													"        e => e.key === 'username-not-unique')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\": \"test\",\n    \"password\": \"TEst1234!@#$aaaa\"\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register missing password",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\": \"test 2\",\n    \"a\": true\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register password type",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'password')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\": \"test\",\n    \"password\": true\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register missing password",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"password\": true\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register not json",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'request-body-json')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "asd"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register wrong content type",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 400\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'unavailable-content-type')).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/pdf",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"a\": true\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "auth-register password format",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status 200\", function() {",
+													"    pm.response.to.have.status(400);",
+													"    pm.response.to.be.error;",
+													"    pm.response.to.be.withBody;",
+													"    pm.response.to.be.json;",
+													"    pm.expect(jsonData.server_info.version).to.be.a('string');",
+													"});",
+													"",
+													"pm.test(\"response contain correct info\", function() {",
+													"",
+													"    pm.expect(jsonData.errors.some(",
+													"        e => e.key === 'password-lower'",
+													"        && e.field === 'password'",
+													"        && typeof e.error_details.min === 'number' )).to.equal(true);",
+													"",
+													"    pm.expect(jsonData.errors.some(",
+													"        e => e.key === 'password-upper'",
+													"        && e.field === 'password'",
+													"        && typeof e.error_details.min === 'number' )).to.equal(true);",
+													"",
+													"    pm.expect(jsonData.errors.some(",
+													"        e => e.key === 'password-number'",
+													"        && e.field === 'password'",
+													"        && typeof e.error_details.min === 'number' )).to.equal(true);",
+													"",
+													"    pm.expect(jsonData.errors.some(",
+													"        e => e.key === 'password-special-character'",
+													"        && e.field === 'password'",
+													"        && typeof e.error_details.min === 'number' )).to.equal(true);",
+													"",
+													"    pm.expect(jsonData.errors.some(",
+													"        e => e.key === 'password-length'",
+													"        && e.field === 'password'",
+													"        && typeof e.error_details.min === 'number'",
+													"        && typeof e.error_details.max === 'number' )).to.equal(true);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{API Key}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"username\": \"test\",\n    \"password\": \" \"\n}"
+										},
+										"url": {
+											"raw": "{{API}}users",
+											"host": [
+												"{{API}}users"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "auth-register incorrect login",
+							"name": "auth-register success",
 							"event": [
 								{
 									"listen": "test",
@@ -594,457 +1290,16 @@
 											"var jsonData = pm.response.json();",
 											"",
 											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(401);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'user-not-found')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"missing\",\n    \"password\": \"missing\"\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register multiple missing fields",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register missing username",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"a\": true\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register username type",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'username')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": true\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register missing password",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"a\": true\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register password type",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'password')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"test\",\n    \"password\": true\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register missing password",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'missing-field')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"password\": true\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register not json",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'request-body-json')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "asd"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register wrong content type",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(e => e.key === 'unavailable-content-type')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/pdf",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"a\": true\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-register password format",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
+											"    pm.response.to.have.status(200);",
+											"    pm.response.to.not.be.error;",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"    pm.expect(jsonData.server_info.version).to.be.a('string');",
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.content.errors.some(",
-											"        e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
-											"",
-											"    pm.expect(jsonData.content.errors.some(",
-											"        e => e.key === 'password-lower'",
-											"        && e.field === 'password'",
-											"        && typeof e.error_details.min === 'number' )).to.equal(true);",
-											"",
-											"    pm.expect(jsonData.content.errors.some(",
-											"        e => e.key === 'password-upper'",
-											"        && e.field === 'password'",
-											"        && typeof e.error_details.min === 'number' )).to.equal(true);",
-											"",
-											"    pm.expect(jsonData.content.errors.some(",
-											"        e => e.key === 'password-number'",
-											"        && e.field === 'password'",
-											"        && typeof e.error_details.min === 'number' )).to.equal(true);",
-											"",
-											"    pm.expect(jsonData.content.errors.some(",
-											"        e => e.key === 'password-special-character'",
-											"        && e.field === 'password'",
-											"        && typeof e.error_details.min === 'number' )).to.equal(true);",
-											"",
-											"    pm.expect(jsonData.content.errors.some(",
-											"        e => e.key === 'password-length'",
-											"        && e.field === 'password'",
-											"        && typeof e.error_details.min === 'number'",
-											"        && typeof e.error_details.max === 'number' )).to.equal(true);",
+											"    pm.expect(jsonData.data.id).to.be.a('number');",
+											"    pm.expect(jsonData.data.errors).to.equal(undefined);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1058,70 +1313,27 @@
 										"key": "Content-Type",
 										"value": "application/json",
 										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{API Key}}",
+										"type": "text"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"password\": \" \"\n}"
+									"raw": "{\n    \"username\": \"test2\",\n    \"password\": \"TEst1234!@#$aaa\"\n}"
 								},
 								"url": {
-									"raw": "{{API}}auth-register",
+									"raw": "{{API}}users",
 									"host": [
-										"{{API}}auth-register"
+										"{{API}}users"
 									]
 								}
 							},
 							"response": []
 						}
 					]
-				},
-				{
-					"name": "auth-register success",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = pm.response.json();",
-									"",
-									"pm.test(\"Status 200\", function() {",
-									"    pm.response.to.have.status(200);",
-									"    pm.response.to.not.be.error;",
-									"    pm.response.to.be.withBody;",
-									"    pm.response.to.be.json;",
-									"    pm.expect(jsonData.server_info.version).to.be.a('string');",
-									"});",
-									"",
-									"pm.test(\"response contain correct info\", function() {",
-									"    pm.expect(jsonData.content.access_token).to.be.a('string');",
-									"    pm.expect(jsonData.content.errors).to.equal(undefined);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"test\",\n    \"password\": \"test\"\n}"
-						},
-						"url": {
-							"raw": "{{API}}auth-login",
-							"host": [
-								"{{API}}auth-login"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}

@@ -5,7 +5,10 @@
   "main": "index.ts",
   "scripts": {
     "start": "netlify dev",
-    "test": "newman run tests/FP.postman_collection.json --environment tests/Local.postman_environment.json --globals tests/workspace.postman_globals.json"
+    "test": "newman run tests/FP.postman_collection.json --environment tests/Local.postman_environment.json --globals tests/workspace.postman_globals.json",
+    "cli:start": "npm start &",
+    "cli:test": "wait-on http://localhost:8888/api/v1 -t 60000 && npm test",
+    "postcli:test": "pkill -f netlify"
   },
   "author": "",
   "license": "ISC",

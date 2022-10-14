@@ -1,0 +1,21 @@
+image: atlassian/default-image:latest
+
+definitions:
+  steps:
+    - step: &install-and-test
+        name: Install NPM dependencies
+        image: node:12
+        caches:
+          - node
+        script:
+          - npm install
+          - npm run cli:start
+          - npm run cli:test
+
+pipelines:
+  pull-requests:
+    "**":
+      - step: *install-and-test
+  branches:
+    main:
+      - step: *install-and-test
