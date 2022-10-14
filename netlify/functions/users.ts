@@ -15,10 +15,6 @@ export const handler: Handler = async (event, _) =>
                 multipleValidations400([
                     hasRequiredStringField('username'),
                     hasRequiredStringField('password'),
-                ])
-            ),
-            chain(
-                multipleValidations400([
                     isPasswordMatch(/[a-z]/, { min: 1 }, 'password-lower'),
                     isPasswordMatch(/[A-Z]/, { min: 1 }, 'password-upper'),
                     isPasswordMatch(/[0-9]/, { min: 1 }, 'password-number'),

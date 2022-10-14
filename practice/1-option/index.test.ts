@@ -1,7 +1,13 @@
+/**
+ * Tests Option
+ * 
+ * @group option
+ */
+
 import 'jest';
 import { add, maybeAdd, fancyAdd } from './index';
 import * as O from 'fp-ts/Option';
-// import { fancyAdd } from "../answers/1-option";
+// import { fancyAdd } from "../answers/option";
 
 describe('Basic Add', () => {
     test('add: 0 + 1', () => {
