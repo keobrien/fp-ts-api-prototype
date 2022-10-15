@@ -1,6 +1,6 @@
 # Overview
 
-Practice problems to learn about Option/Maybe.
+Practice problems to learn about Map vs Chain with Option.
 
 ## Prerequisite
 1. Follow readme in root project.
@@ -9,10 +9,7 @@ Practice problems to learn about Option/Maybe.
 1. `index.ts` includes key functions:
     - `add()` is a non-functional programing style with unit test but prone to issues.
     - `maybeAdd()` is a functional programing style with unit test and better input handeling.
-    - `fancyAdd()` is incomplete but has failing unit tests, follow the todos to make all tests pass.
-1. In the root directory, run `npm run test:option` from inside this folder.
-1. Once the `fancyAdd` unit tests all pass, you're done!
-1. (Optional) check the answers folder to see how I solved it.
+1. In the root directory, run `npm run test:mapChain` from inside this folder.
 
 ## Resources
 1. [fp-ts Option](https://gcanti.github.io/fp-ts/modules/Option.ts.html).

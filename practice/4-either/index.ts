@@ -22,32 +22,32 @@ export const checkPassword = (password:any): any => {
 
     const errors = [];
 
-    if(!isString(password)) {
+    if( typeof password !== 'string' ) {
         errors.push('Password is required.');
         return errors;
     }
 
-    if(!hasMinStringLength(10)(password)) {
+    if( password.length < 10 ) {
         errors.push('Password must be at least 10 characters long.');
     }
 
-    if(!hasMaxStringLength(25)(password)) {
+    if( password.length > 25 ) {
         errors.push('Password must not be longer than 25 characters.');
     }
 
-    if(!hasXOrMoreStringMatches(/[a-z]{2,}/)(password)) {
+    if( ! /[a-z]{2,}/.test(password) ) {
         errors.push('Password have at least 2 or more lowercase letters.');
     }
 
-    if(!hasXOrMoreStringMatches(/[A-Z]{2,}/)(password)) {
+    if( ! /[A-Z]{2,}/.test(password) ) {
         errors.push('Password have at least 2 or more upper letters.');
     }
 
-    if(!hasXOrMoreStringMatches(/[^a-zA-Z\d]{2,}/)(password)) {
+    if( ! /[^a-zA-Z\d]{2,}/.test(password) ) {
         errors.push('Password have at least 2 or more special characters.');
     }
 
-    if(!hasXOrMoreStringMatches(/[\d]{2,}/)(password)) {
+    if( ! /[\d]{2,}/.test(password) ) {
         errors.push('Password have at least 2 or more numbers.');
     }
 
@@ -92,12 +92,8 @@ export const eitherCheckPasswordAdd = (password:any): Array<string> =>
 const EXAMPLE_ERROR = (_:any) => E.left(['Fix me.']);
 const EXAMPLE_SUCESS = (a:any) => E.right(a);
 const log = (a:any) => { console.info(a); return a };
-export const isString = (value:any): Boolean => typeof value === 'string';
-export const hasMinStringLength = (minLength:any): Function => (value:string): Boolean => value.length >= minLength;
-export const hasMaxStringLength = (maxLength:any): Function => (value:string): Boolean => value.length <= maxLength;
-export const hasXOrMoreStringMatches = (match:RegExp): Function => (value:string): Boolean => match.test(value);
 
-export const multipleValidations = (checks: Array<Function>) => (input: any) => 
+const multipleValidations = (checks: Array<Function>) => (input: any) => 
     pipe(
         checks,
         A.flap(input),

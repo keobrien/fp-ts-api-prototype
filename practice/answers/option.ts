@@ -1,6 +1,5 @@
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
-import { allAreNumbers, addAll } from "../1-option/index";
 
 export const fancyAdd = (first:any): Function =>
     (second:any): string =>
@@ -34,4 +33,16 @@ const allMoreThan5 = (arrayOfNumbers: Array<number>) =>
 const allLessThan50 = (arrayOfNumbers: Array<number>) => 
     arrayOfNumbers.every((number): Boolean => number < 50)
         ? O.some(arrayOfNumbers)
-        : O.none
+        : O.none;
+
+const add = (first:any, second:any): any =>
+    first + second;
+
+const isNotNumber = (number:any): Boolean =>
+    (typeof number !== 'number') || Number.isNaN(number);
+
+const allAreNumbers = (arrayOfNumbers:Array<any>): O.Option<Array<number>> =>
+    arrayOfNumbers.findIndex(isNotNumber) === -1 ? O.some(arrayOfNumbers) : O.none;
+    
+const addAll = (arrayOfNumbers:Array<number>): number =>
+    arrayOfNumbers.reduce(add);
