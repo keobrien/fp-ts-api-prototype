@@ -9,6 +9,7 @@
     "cli:start": "npm start &",
     "cli:test": "wait-on http://localhost:8888/api/v1 -t 60000 && npm test",
     "postcli:test": "pkill -f netlify",
+    "test:box": "jest --group=box",
     "test:option": "jest --group=option",
     "test:either": "jest --group=either"
   },
