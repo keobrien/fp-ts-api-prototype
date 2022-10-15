@@ -6,8 +6,8 @@
 
 import 'jest';
 import { checkPassword } from './index';
-// import { eitherCheckPasswordAdd } from './index';
-import { eitherCheckPasswordAdd } from '../answers/either';
+import { eitherCheckPasswordAdd } from './index';
+// import { eitherCheckPasswordAdd } from '../answers/either';
 
 describe('Basic check password', () => {
     test('checkPassword: 0', () => {

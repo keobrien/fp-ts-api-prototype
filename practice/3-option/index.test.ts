@@ -5,8 +5,8 @@
  */
 
 import 'jest';
-// import { fancyAdd } from './index';
-import { fancyAdd } from '../answers/option';
+import { fancyAdd } from './index';
+// import { fancyAdd } from '../answers/option';
 
 describe('Facy Add', () => {
     test('fancyAdd: 6 + 8', () => {
