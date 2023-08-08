@@ -28,7 +28,7 @@ export {
 
 //======================== Start implementation
 
-const multipleValidations = (checks: Validation) => (response: Function) => (input: any) => 
+const multipleValidations = (response: Function) => (checks: Validation) => (input: any) => 
     pipe(
         checks,
         A.flap(input),
@@ -37,8 +37,7 @@ const multipleValidations = (checks: Validation) => (response: Function) => (inp
         result => result.length > 0 ? E.left(response(result)) : E.right(input)
     );
 
-const multipleValidations400 = (checks: Validation) =>
-    multipleValidations(checks)(respond400);
+const multipleValidations400 = multipleValidations(respond400);
 
 const hasRequiredBodyField = (field: string) => (event: Event) =>
     pipe(

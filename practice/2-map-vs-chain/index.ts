@@ -8,11 +8,11 @@ export const add = (first:any, second:any): any =>
 // New: Option and some() vs none, sometimes refered to as Maybe with just() vs none
 // New: chain vs map vs match
 export const maybeAdd = (first:any, second:any): O.Option<number> =>
-    // Pipe takes the first agument, passed it as an argument to the second argument function, passes the reulst of that to the 3rd, etc.
+    // Pipe takes the first argument, passed it as an argument to the second argument function, passes the reulst of that to the 3rd, etc.
     pipe(
         // Of wraps the value in a Option some() or none
         O.of([first, second]),
-        // chain unpacks the maybe and passes the value, requires returing a new Option, allowing switching between some() and none.
+        // chain unpacks the maybe and passes the value, requires returning a new Option, allowing switching between some() and none.
         // O.chain(value => { console.info(value); return O.some(value); }),
         O.chain(allAreNumbers),
         // map also unpacks the maybe and passes the value, puts return value back in the to a some() type.
