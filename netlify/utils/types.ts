@@ -16,12 +16,8 @@ export declare type Response = {
     headers?: { [header: string]: string | number | boolean; }
 }
 
-export declare type Handler = () => Response;
-
-export interface Handlers {
-    post?: Handler;
-    get?: Handler;
-    put?: Handler;
-    patch?: Handler;
-    delete?: Handler;
+export declare type User = {
+    username: string;
+    password: string;
+    access_token: string;
 }

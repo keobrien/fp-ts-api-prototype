@@ -1,29 +1,25 @@
+import type { HandlerEvent } from "@netlify/functions";
 import * as E from "fp-ts/lib/Either";
 import * as O from "fp-ts/lib/Option";
 import * as A from "fp-ts/lib/Array";
-import { respond400, respond401, respond500, respond503 } from "../http/responses";
-import { log, maybeObjKey, objKey } from "../utils";
+import { respond400, respond401, respond500, respond503 } from "./responses";
+import { maybeObjKey, objKey } from "./utils";
 import { pipe } from "fp-ts/lib/function";
-import { Errors, Validation } from "../types";
-import { Event } from "@netlify/functions/dist/function/event";
-const apiKeys = require("../../data/api-keys.json");
+import { Validation } from "./types";
 
 export {
     // utils
     multipleValidations,
     multipleValidations400,
-    testingServerErrorCodes,
     // generic fields
     hasRequiredBodyField,
     isRequiredFieldType,
     hasRequiredStringField,
     isFieldStringMatch,
     isPasswordMatch,
-    // query paraters
+    // query parameters
     hasRequiredQueryParam,
     validateRequiredQueryParam,
-    // api keys
-    validateApiKey,
 }
 
 //======================== Start implementation
@@ -34,19 +30,21 @@ const multipleValidations = (response: Function) => (checks: Validation) => (inp
         A.flap(input),
         A.lefts,
         A.flatten,
-        result => result.length > 0 ? E.left(response(result)) : E.right(input)
+        result => result.length > 0
+            ? E.left(response(result))
+            : E.right(input)
     );
 
 const multipleValidations400 = multipleValidations(respond400);
 
-const hasRequiredBodyField = (field: string) => (event: Event) =>
+const hasRequiredBodyField = (field: string) => (event: HandlerEvent) =>
     pipe(
         event,
         maybeObjKey(`body.${field}`),
         E.fromOption(() => [{ key: 'missing-field', field: field, developer_details: `Request is missing required field: ${field}.` }]),
     );
 
-const isRequiredFieldType = (field: string) => (type: string) => (event: Event) =>
+const isRequiredFieldType = (field: string) => (type: string) => (event: HandlerEvent) =>
     pipe(
         event,
         hasRequiredBodyField(field),
@@ -64,7 +62,7 @@ const hasRequiredStringField = (field: string) => isRequiredFieldType(field)('st
 const isFieldStringMatch = 
     (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
         (field: string) => 
-            (event: Event) =>
+            (event: HandlerEvent) =>
                 pipe(
                     event,
                     hasRequiredStringField(field),
@@ -80,7 +78,7 @@ const isFieldStringMatch =
                     )
                 );
 
-const hasRequiredQueryParam = (field: string) => (event: Event) =>
+const hasRequiredQueryParam = (field: string) => (event: HandlerEvent) =>
     pipe(
         event,
         maybeObjKey(`queryStringParameters.${field}`),
@@ -90,7 +88,7 @@ const hasRequiredQueryParam = (field: string) => (event: Event) =>
         )
     );
 
-const validateRequiredQueryParam = (field: string) => (event: Event) =>
+const validateRequiredQueryParam = (field: string) => (event: HandlerEvent) =>
     pipe(
         event,
         hasRequiredQueryParam(field),
@@ -99,46 +97,6 @@ const validateRequiredQueryParam = (field: string) => (event: Event) =>
             () => E.right(event)
         )
     );
-
-const testingServerErrorCodes = (event: Event) =>
-    pipe(
-        maybeObjKey(`headers.x-api-key`)(event),
-        O.match(
-            () => E.right(''),
-            key => E.right(key)
-        ),
-        E.chain(key => key === 'TEST-MAINTINANCE'
-            ? E.left(respond503())
-            : E.right(key)
-        ),
-        E.chain(key => key === 'TEST-SERVER-ERROR'
-            ? E.left(respond500())
-            : E.right(key)
-        ),
-        E.match(
-            result => E.left(result),
-            () => E.right(event)
-        )
-    );
-
-const validateApiKey = (event: Event) =>
-    pipe(
-        maybeObjKey(`headers.x-api-key`)(event),
-        O.match(
-            () => E.left([{ key: 'missing-api-key', developer_details: 'An api key was not provided.' }]),
-            key => E.right(key)
-        ),
-        E.map(key => { console.info(key); return key; }),
-        E.chain(key => apiKeys.includes(key)
-            ? E.right(event)
-            : E.left([{ key: 'invalid-api-key', developer_details: 'The api key provided is not valid.' }])
-        ),
-        E.match(
-            errors => E.left(respond401(errors)),
-            () => E.right(event)
-        )
-    );
-
 
 const isPasswordMatch = (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
     isFieldStringMatch(pattern, errorDetails, errorKey)('password');

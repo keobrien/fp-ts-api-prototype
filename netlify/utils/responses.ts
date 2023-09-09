@@ -1,5 +1,5 @@
-import { Errors, Response } from "../types";
-const packageJson = require("../../../package.json");
+import { Errors, Response } from "./types";
+const packageJson = require("../../package.json");
 
 export {
     respond,
