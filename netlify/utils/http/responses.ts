@@ -2,6 +2,7 @@ import { Errors, Response } from "../types";
 const packageJson = require("../../../package.json");
 
 export {
+    respond,
     respond200,
     respond400,
     respond401,
