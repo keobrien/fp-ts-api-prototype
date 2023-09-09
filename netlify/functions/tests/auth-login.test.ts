@@ -1,8 +1,7 @@
 import 'jest';
 import * as E from "fp-ts/lib/Either";
 import { authenticateUser } from '../auth-login';
-import users from "../../data/users.json";
-import { pipe } from 'fp-ts/lib/function';
+import users from "../data/users.json";
 
 /**
  * Tests auth-login

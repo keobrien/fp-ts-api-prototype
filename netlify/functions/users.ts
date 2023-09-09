@@ -1,9 +1,9 @@
 import { Handler } from "@netlify/functions";
 import { chain, match, right, left } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { handleHttpMethods, hasRequiredStringField, isPasswordMatch, multipleValidations400, objKey, processPostRequest, respond200 } from "../utils/utils";
-import { User } from "../utils/types";
-const users = require("../data/users.json");
+import { handleHttpMethods, hasRequiredStringField, isPasswordMatch, multipleValidations400, objKey, processPostRequest, respond200 } from "./utils/utils";
+import { User } from "./utils/types";
+const users = require("./data/users.json");
 
 export const handler: Handler = handleHttpMethods({
     post: (event) => pipe(

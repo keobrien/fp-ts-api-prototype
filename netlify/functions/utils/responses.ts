@@ -1,5 +1,4 @@
 import { Errors, Response } from "./types";
-const packageJson = require("../../package.json");
 
 export {
     respond,
@@ -17,7 +16,7 @@ export {
 
 const respond = (statusCode:number) => (content:any = null): Response => {
     if(content === null) return { statusCode: statusCode };
-    content.server_info = { version: packageJson.version };
+    content.server_info = { version: process.env.npm_package_version };
     return {
         statusCode: statusCode,
         body: JSON.stringify(content),

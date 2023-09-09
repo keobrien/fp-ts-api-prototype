@@ -456,103 +456,6 @@
 							"name": "errors",
 							"item": [
 								{
-									"name": "auth-register missing API key",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"var jsonData = pm.response.json();",
-													"",
-													"pm.test(\"Status 401\", function() {",
-													"    pm.response.to.have.status(401);",
-													"    pm.response.to.be.error;",
-													"    pm.response.to.be.withBody;",
-													"    pm.response.to.be.json;",
-													"});",
-													"",
-													"pm.test(\"response contain correct info\", function() {",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-api-key')).to.equal(true);",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "{{API}}users",
-											"host": [
-												"{{API}}users"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "auth-register wrong API key",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"var jsonData = pm.response.json();",
-													"",
-													"pm.test(\"Status 401\", function() {",
-													"    pm.response.to.have.status(401);",
-													"    pm.response.to.be.error;",
-													"    pm.response.to.be.withBody;",
-													"    pm.response.to.be.json;",
-													"});",
-													"",
-													"pm.test(\"response contain correct info\", function() {",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'invalid-api-key')).to.equal(true);",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "WRONG",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
-										},
-										"url": {
-											"raw": "{{API}}users",
-											"host": [
-												"{{API}}users"
-											]
-										}
-									},
-									"response": []
-								},
-								{
 									"name": "auth-register multiple missing fields",
 									"event": [
 										{
@@ -582,12 +485,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
@@ -635,12 +533,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
@@ -689,12 +582,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
@@ -742,18 +630,13 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"username\": \"test\",\n    \"password\": \"TEst1234!@#$aaaa\"\n}"
+											"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"TEst1234!@#$aaaa\"\n}"
 										},
 										"url": {
 											"raw": "{{API}}users",
@@ -793,12 +676,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
@@ -844,12 +722,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
@@ -895,12 +768,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
@@ -946,12 +814,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
@@ -998,11 +861,6 @@
 											{
 												"key": "Content-Type",
 												"value": "application/pdf",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
 												"type": "text"
 											}
 										],
@@ -1074,12 +932,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "x-api-key",
-												"value": "{{API Key}}",
+												"value": "application/json; charset=utf-8",
 												"type": "text"
 											}
 										],
@@ -1129,7 +982,7 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
+										"value": "application/json; charset=utf-8",
 										"type": "text"
 									}
 								],
