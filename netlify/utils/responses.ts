@@ -10,7 +10,7 @@ export {
     respond404,
     respond500,
     respond503,
-    respond404NotFound
+    error,
 }
 
 //======================== Start implementation
@@ -35,4 +35,4 @@ const respond403 = respondWithErrors(403);
 const respond404 = respondWithErrors(404);
 const respond500 = respondWithErrors(500);
 const respond503 = respondWithErrors(503);
-const respond404NotFound = respondWithErrors(404)([{ key: 'api-not-found', developer_details: 'API endpoint not found.' }]);
+const error = (error: Response) => error;

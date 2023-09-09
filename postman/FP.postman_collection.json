@@ -14,103 +14,6 @@
 					"name": "errors",
 					"item": [
 						{
-							"name": "auth-login missing API key",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"HTTP Status\", function() {",
-											"    pm.response.to.have.status(401);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-api-key')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-login wrong API key",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"HTTP Status\", function() {",
-											"    pm.response.to.have.status(401);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'invalid-api-key')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "WRONG",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "auth-login incorrect login",
 							"event": [
 								{
@@ -139,12 +42,7 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
+										"value": "application/json; charset=utf-8",
 										"type": "text"
 									}
 								],
@@ -191,12 +89,7 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
+										"value": "application/json; charset=utf-8",
 										"type": "text"
 									}
 								],
@@ -230,6 +123,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
+											"    pm.expect(jsonData.errors.length).to.equal(1);",
 											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
 											"});"
 										],
@@ -242,18 +136,13 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
+										"value": "application/json; charset=utf-8",
 										"type": "text"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"a\": true\n}"
+									"raw": "{\n    \"password\": \"test\"\n}"
 								},
 								"url": {
 									"raw": "{{API}}auth-login",
@@ -281,6 +170,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
+											"    pm.expect(jsonData.errors.length).to.equal(1);",
 											"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'username')).to.equal(true);",
 											"});"
 										],
@@ -293,18 +183,13 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
+										"value": "application/json; charset=utf-8",
 										"type": "text"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\": true\n}"
+									"raw": "{\n    \"username\": true,\n    \"password\": \"test\"\n}"
 								},
 								"url": {
 									"raw": "{{API}}auth-login",
@@ -332,6 +217,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
+											"    pm.expect(jsonData.errors.length).to.equal(1);",
 											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
 											"});"
 										],
@@ -344,18 +230,13 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
+										"value": "application/json; charset=utf-8",
 										"type": "text"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"a\": true\n}"
+									"raw": "{\n    \"username\": \"test\"\n}"
 								},
 								"url": {
 									"raw": "{{API}}auth-login",
@@ -383,6 +264,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
+											"    pm.expect(jsonData.errors.length).to.equal(1);",
 											"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'password')).to.equal(true);",
 											"});"
 										],
@@ -395,69 +277,13 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
+										"value": "application/json; charset=utf-8",
 										"type": "text"
 									}
 								],
 								"body": {
 									"mode": "raw",
 									"raw": "{\n    \"username\": \"test\",\n    \"password\": true\n}"
-								},
-								"url": {
-									"raw": "{{API}}auth-login",
-									"host": [
-										"{{API}}auth-login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "auth-login missing password",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = pm.response.json();",
-											"",
-											"pm.test(\"Status 200\", function() {",
-											"    pm.response.to.have.status(400);",
-											"    pm.response.to.be.error;",
-											"    pm.response.to.be.withBody;",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field')).to.equal(true);",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"password\": true\n}"
 								},
 								"url": {
 									"raw": "{{API}}auth-login",
@@ -485,6 +311,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
+											"    pm.expect(jsonData.errors.length).to.equal(1);",
 											"    pm.expect(jsonData.errors.some(e => e.key === 'request-body-json')).to.equal(true);",
 											"});"
 										],
@@ -497,12 +324,7 @@
 								"header": [
 									{
 										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
+										"value": "application/json; charset=utf-8",
 										"type": "text"
 									}
 								],
@@ -537,6 +359,7 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
+											"    pm.expect(jsonData.errors.length).to.equal(1);",
 											"    pm.expect(jsonData.errors.some(e => e.key === 'unavailable-content-type')).to.equal(true);",
 											"});"
 										],
@@ -604,18 +427,13 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "x-api-key",
-								"value": "{{API Key}}",
+								"value": "application/json; charset=utf-8",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test\",\n    \"password\": \"test\"\n}"
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"pass123\"\n}"
 						},
 						"url": {
 							"raw": "{{API}}auth-login",
@@ -1312,11 +1130,6 @@
 									{
 										"key": "Content-Type",
 										"value": "application/json",
-										"type": "text"
-									},
-									{
-										"key": "x-api-key",
-										"value": "{{API Key}}",
 										"type": "text"
 									}
 								],

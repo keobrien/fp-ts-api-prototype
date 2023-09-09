@@ -1,39 +1,54 @@
-import type { Handler, HandlerEvent, HandlerContext } from "@netlify/functions";
-import { chain, left, match, right } from "fp-ts/lib/Either";
+import type { Handler, HandlerEvent } from "@netlify/functions";
+import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { handleHttpMethods, hasRequiredStringField, multipleValidations400, objKey, processPostRequest, respond200, respond401 } from "../utils/utils";
-import { User } from "../utils/types";
-const users = require("../data/users.json");
+import { faker } from '@faker-js/faker';
+import { error, handleHttpMethods, hasRequiredStringField, multipleValidations400, objKey, processPostRequest, respond200, respond401 } from "../utils/utils";
+import { NormalizedHandlerEvent, User } from "../utils/types";
+import users from "../data/users.json";
+
+
+
 
 export const handler: Handler = handleHttpMethods({
-    post: (event) => pipe(
-        right(event),
-        chain(processPostRequest),
-        chain(
+    post: (event: HandlerEvent) => pipe(
+        event,
+        processPostRequest,
+        E.chain(
             multipleValidations400([
                 hasRequiredStringField('username'),
                 hasRequiredStringField('password'),
             ])
         ),
-        chain(authenticateUser),
-        match(
-            (error) => error,
-            user => respond200({ user })
+        E.chain(authenticateUser),
+        E.match(
+            error,
+            user => respond200({
+                profile: {
+                    id: user.id,
+                    first_name: faker.person.firstName(),
+                    last_name: faker.person.lastName()
+                },
+                access_token: user.access_token,
+                refresh_token: faker.string.alphanumeric(16)
+            })
         )
     )
 });
 
-const authenticateUser = (event: Event) => {
+
+
+
+export const authenticateUser = (event: NormalizedHandlerEvent) => {
     const username = objKey('body.username')(event);
     const password = objKey('body.password')(event);
-    const user = users.find((user: User) =>
+    const user:User = users.find((user: User) =>
         user.username === username
         && user.password === password
     );
     
     return user
-        ? right(user)
-        : left(respond401([{
+        ? E.right(user)
+        : E.left(respond401([{
             key: 'user-not-found',
             developer_details: `username "${username}" and password combination not found.`
         }]));

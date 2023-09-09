@@ -2,8 +2,8 @@ import type { HandlerEvent } from "@netlify/functions";
 import * as O from 'fp-ts/Option';
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { respond400, respond404NotFound } from "./responses";
-import { maybeObjKey } from "./utils";
+import { respond400, respond404 } from "./responses";
+import { Response } from "./types";
 
 export {
     processPostRequest,
@@ -12,28 +12,43 @@ export {
 
 //======================== Start implementation
 
-const processPostRequest = (event: HandlerEvent) =>
+const processPostRequest = (event: HandlerEvent): E.Either<Response, HandlerEvent> =>
     pipe(
         E.right(event),
-        E.chain(isJson),
+        E.chain(isAllowedType),
         E.chain(decodeBody)
-    )
+    );
 
-const isJson = (event: HandlerEvent) =>
+const isAllowedType = (event: HandlerEvent): E.Either<Response, HandlerEvent> =>
     pipe(
-        maybeObjKey('headers.content-type')(event),
-        O.chain(type =>
-            type === 'application/json'
-                ? O.some(type)
-                : O.none
-        ),
-        E.fromOption(
-            () => respond400([{ 
+        event?.headers['content-type'] || '',
+        normalizeContentTypeHeader,
+        O.chain( maybeStringIncludes('application/json') ),
+        O.chain( maybeStringIncludes('charset=utf-8') ),
+        O.match(
+            () => E.left(respond400([{ 
                 key: 'unavailable-content-type',
                 developer_details: `The content type requested is not available.`
-            }])
+            }])),
+            result => E.right(event)
         ),
-        E.chain(_ => E.right(event))
+    );
+
+const normalizeContentTypeHeader = (header: string): O.Option<string> =>
+    typeof header === 'string'
+    && header.length > 0
+        ? O.some(header.toLocaleLowerCase())
+        : O.none;
+
+const maybeStringIncludes = (expected: string) => (fullString: string): O.Option<string> =>
+    fullString.includes(expected)
+        ? O.some(fullString)
+        : O.none;
+
+const decodeBody = (event: HandlerEvent): E.Either<Response, HandlerEvent> =>
+    E.tryCatch(
+        () => { event.body = JSON.parse(event.body); return event },
+        error => respond400([{ key: 'request-body-json', developer_details: `Unable to parse request body json: ${error}` }])
     );
 
 const handleHttpMethods = (handlers) => async (event: HandlerEvent) => 
@@ -46,13 +61,9 @@ const handleHttpMethods = (handlers) => async (event: HandlerEvent) =>
                 : E.left(event)
         ),
         E.match(
-            _ => respond404NotFound,
+            _ => respond404([
+                { key: 'api-not-found', developer_details: 'API endpoint not found.' }
+            ]),
             found => found(event)
         )
-    )
-
-const decodeBody = (event: HandlerEvent) =>
-    E.tryCatch(
-        () => { event.body = JSON.parse(event.body); return event },
-        error => respond400([{ key: 'request-body-json', developer_details: `Unable to parse request body json: ${error}` }])
     );

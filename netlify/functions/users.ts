@@ -25,7 +25,7 @@ export const handler: Handler = handleHttpMethods({
             (error) => error,
             event => respond200({
                 'id': 0
-                })
+            })
         )
     )
 });

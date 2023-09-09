@@ -1,3 +1,4 @@
+import type { HandlerEvent } from "@netlify/functions";
 import { Either } from "fp-ts/lib/Either";
 
 export declare type Error = {
@@ -17,7 +18,12 @@ export declare type Response = {
 }
 
 export declare type User = {
+    id: number;
     username: string;
     password: string;
     access_token: string;
+}
+
+export interface NormalizedHandlerEvent extends Omit<HandlerEvent, 'body'> {
+    body: Object
 }
