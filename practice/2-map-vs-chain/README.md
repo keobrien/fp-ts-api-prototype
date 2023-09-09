@@ -7,8 +7,8 @@ Practice problems to learn about Map vs Chain with Option.
 
 ## What to do
 1. `index.ts` includes key functions:
-    - `add()` is a non-functional programing style with unit test but prone to issues.
-    - `maybeAdd()` is a functional programing style with unit test and better input handeling.
+    - `add()` is a + operation with unit test but prone to issues.
+    - `maybeAdd()` is using Maybe/Option with unit test and better input handling.
 1. In the root directory, run `npm run test:mapChain` from inside this folder.
 
 ## Resources

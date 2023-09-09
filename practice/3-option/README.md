@@ -7,7 +7,7 @@ Practice problems to learn about Option/Maybe.
 
 ## What to do
 1. `index.ts` includes key functions:
-    - `fancyAdd()` is incomplete but has failing unit tests, follow the todos to make all tests pass.
+    - `fancyAdd()` is incomplete but has failing unit tests, follow the todo comments to make all tests pass.
 1. In the root directory, run `npm run test:option` from inside this folder.
 1. Once the `fancyAdd` unit tests all pass, you're done!
 1. (Optional) check the answers folder to see how I solved it.
