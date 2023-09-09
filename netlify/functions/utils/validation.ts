@@ -12,14 +12,8 @@ export {
     multipleValidations,
     multipleValidations400,
     // generic fields
-    hasRequiredBodyField,
-    isRequiredFieldType,
-    hasRequiredStringField,
-    isFieldStringMatch,
-    isPasswordMatch,
-    // query parameters
-    hasRequiredQueryParam,
-    validateRequiredQueryParam,
+    requiredStringField,
+    isRegExMatch
 }
 
 //======================== Start implementation
@@ -37,17 +31,17 @@ const multipleValidations = (response: Function) => (checks: Validation) => (inp
 
 const multipleValidations400 = multipleValidations(respond400);
 
-const hasRequiredBodyField = (field: string) => (event: HandlerEvent) =>
+const requiredField = (field: string) => (event: HandlerEvent) =>
     pipe(
         event,
-        maybeObjKey(`body.${field}`),
+        maybeObjKey(field),
         E.fromOption(() => [{ key: 'missing-field', field: field, developer_details: `Request is missing required field: ${field}.` }]),
     );
 
-const isRequiredFieldType = (field: string) => (type: string) => (event: HandlerEvent) =>
+const requiredFieldOfType = (field: string) => (type: string) => (event: HandlerEvent) =>
     pipe(
         event,
-        hasRequiredBodyField(field),
+        requiredField(field),
         E.chain(value => typeof value === type
             ? E.right(event)
             : E.left([{ key: 'incorrect-field-type', field: field, developer_details: `Field is is not a '${type}', it is a '${typeof value}' with the value ${JSON.stringify(value)}.` }])),
@@ -57,16 +51,16 @@ const isRequiredFieldType = (field: string) => (type: string) => (event: Handler
         )
     );
 
-const hasRequiredStringField = (field: string) => isRequiredFieldType(field)('string');
+const requiredStringField = (field: string) => requiredFieldOfType(field)('string');
 
-const isFieldStringMatch = 
+const isRegExMatch = 
     (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
         (field: string) => 
             (event: HandlerEvent) =>
                 pipe(
                     event,
-                    hasRequiredStringField(field),
-                    E.chain(event => E.right(objKey(`body.${field}`)(event))),
+                    requiredStringField(field),
+                    E.chain(event => E.right(objKey(field)(event))),
                     E.chain(value => 
                         value.match(pattern) !== null
                             ? E.right(event)
@@ -77,26 +71,3 @@ const isFieldStringMatch =
                                 error_details: errorDetails}])
                     )
                 );
-
-const hasRequiredQueryParam = (field: string) => (event: HandlerEvent) =>
-    pipe(
-        event,
-        maybeObjKey(`queryStringParameters.${field}`),
-        O.match(
-            () => E.left([{ key: 'missing-query-param', field: field, developer_details: `Request is missing required query parameter: ${field}.` }]),
-            () => E.right(event)
-        )
-    );
-
-const validateRequiredQueryParam = (field: string) => (event: HandlerEvent) =>
-    pipe(
-        event,
-        hasRequiredQueryParam(field),
-        E.match(
-            errors => E.left(respond400(errors)),
-            () => E.right(event)
-        )
-    );
-
-const isPasswordMatch = (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
-    isFieldStringMatch(pattern, errorDetails, errorKey)('password');

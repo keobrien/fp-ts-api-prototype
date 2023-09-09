@@ -76,8 +76,8 @@
 											"});",
 											"",
 											"pm.test(\"response contain correct info\", function() {",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.username')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.password')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -124,7 +124,7 @@
 											"",
 											"pm.test(\"response contain correct info\", function() {",
 											"    pm.expect(jsonData.errors.length).to.equal(1);",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.username')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -171,7 +171,7 @@
 											"",
 											"pm.test(\"response contain correct info\", function() {",
 											"    pm.expect(jsonData.errors.length).to.equal(1);",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'username')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'body.username')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -218,7 +218,7 @@
 											"",
 											"pm.test(\"response contain correct info\", function() {",
 											"    pm.expect(jsonData.errors.length).to.equal(1);",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.password')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -265,7 +265,7 @@
 											"",
 											"pm.test(\"response contain correct info\", function() {",
 											"    pm.expect(jsonData.errors.length).to.equal(1);",
-											"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'password')).to.equal(true);",
+											"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'body.password')).to.equal(true);",
 											"});"
 										],
 										"type": "text/javascript"
@@ -456,7 +456,7 @@
 							"name": "errors",
 							"item": [
 								{
-									"name": "auth-register multiple missing fields",
+									"name": "register multiple missing fields",
 									"event": [
 										{
 											"listen": "test",
@@ -472,8 +472,8 @@
 													"});",
 													"",
 													"pm.test(\"response contain correct info\", function() {",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.username')).to.equal(true);",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.password')).to.equal(true);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -503,7 +503,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register missing username & pass",
+									"name": "register missing username & pass",
 									"event": [
 										{
 											"listen": "test",
@@ -519,9 +519,9 @@
 													"});",
 													"",
 													"pm.test(\"response contain correct info\", function() {",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'username')).to.equal(true);",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.username')).to.equal(true);",
 													"",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.password')).to.equal(true);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -551,7 +551,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register username type",
+									"name": "register username type",
 									"event": [
 										{
 											"listen": "test",
@@ -567,7 +567,7 @@
 													"});",
 													"",
 													"pm.test(\"response contain correct info\", function() {",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'username')).to.equal(true);",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'body.username')).to.equal(true);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -600,7 +600,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register unique username",
+									"name": "register unique username",
 									"event": [
 										{
 											"listen": "test",
@@ -648,7 +648,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register missing password",
+									"name": "register missing password",
 									"event": [
 										{
 											"listen": "test",
@@ -664,7 +664,7 @@
 													"});",
 													"",
 													"pm.test(\"response contain correct info\", function() {",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'password')).to.equal(true);",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'missing-field' && e.field === 'body.password')).to.equal(true);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -694,7 +694,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register password type",
+									"name": "register password type",
 									"event": [
 										{
 											"listen": "test",
@@ -710,7 +710,7 @@
 													"});",
 													"",
 													"pm.test(\"response contain correct info\", function() {",
-													"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'password')).to.equal(true);",
+													"    pm.expect(jsonData.errors.some(e => e.key === 'incorrect-field-type'  && e.field === 'body.password')).to.equal(true);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -740,7 +740,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register missing password",
+									"name": "register missing password",
 									"event": [
 										{
 											"listen": "test",
@@ -786,7 +786,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register not json",
+									"name": "register not json",
 									"event": [
 										{
 											"listen": "test",
@@ -832,7 +832,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register wrong content type",
+									"name": "register wrong content type",
 									"event": [
 										{
 											"listen": "test",
@@ -878,7 +878,7 @@
 									"response": []
 								},
 								{
-									"name": "auth-register password format",
+									"name": "register password format",
 									"event": [
 										{
 											"listen": "test",
@@ -898,27 +898,27 @@
 													"",
 													"    pm.expect(jsonData.errors.some(",
 													"        e => e.key === 'password-lower'",
-													"        && e.field === 'password'",
+													"        && e.field === 'body.password'",
 													"        && typeof e.error_details.min === 'number' )).to.equal(true);",
 													"",
 													"    pm.expect(jsonData.errors.some(",
 													"        e => e.key === 'password-upper'",
-													"        && e.field === 'password'",
+													"        && e.field === 'body.password'",
 													"        && typeof e.error_details.min === 'number' )).to.equal(true);",
 													"",
 													"    pm.expect(jsonData.errors.some(",
 													"        e => e.key === 'password-number'",
-													"        && e.field === 'password'",
+													"        && e.field === 'body.password'",
 													"        && typeof e.error_details.min === 'number' )).to.equal(true);",
 													"",
 													"    pm.expect(jsonData.errors.some(",
 													"        e => e.key === 'password-special-character'",
-													"        && e.field === 'password'",
+													"        && e.field === 'body.password'",
 													"        && typeof e.error_details.min === 'number' )).to.equal(true);",
 													"",
 													"    pm.expect(jsonData.errors.some(",
 													"        e => e.key === 'password-length'",
-													"        && e.field === 'password'",
+													"        && e.field === 'body.password'",
 													"        && typeof e.error_details.min === 'number'",
 													"        && typeof e.error_details.max === 'number' )).to.equal(true);",
 													"});"
@@ -952,7 +952,7 @@
 							]
 						},
 						{
-							"name": "auth-register success",
+							"name": "register success",
 							"event": [
 								{
 									"listen": "test",
