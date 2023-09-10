@@ -1,4 +1,4 @@
-import { Errors, Response } from "./types";
+import { ErrorResponse, Errors, Response } from "./types";
 
 export {
     respond,
@@ -13,7 +13,7 @@ export {
 }
 
 //======================== Start implementation
-const error = (error: Response) => error;
+const error = (error: ErrorResponse) => error;
 
 const respond = (statusCode:number) => (content:any = {}): Response => {
     content.server_info = {
@@ -29,7 +29,7 @@ const respond = (statusCode:number) => (content:any = {}): Response => {
 }
 
 const respondWithErrors = (statusCode:number) =>
-    (errors:Errors = []) => 
+    (errors:Errors = []): ErrorResponse => 
         respond(statusCode)({ errors: errors });
 
 const respond200 = (content: Object) =>

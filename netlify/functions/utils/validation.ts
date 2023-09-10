@@ -1,11 +1,9 @@
-import type { HandlerEvent } from "@netlify/functions";
 import * as E from "fp-ts/lib/Either";
-import * as O from "fp-ts/lib/Option";
 import * as A from "fp-ts/lib/Array";
-import { respond400, respond401, respond500, respond503 } from "./responses";
+import { respond400 } from "./responses";
 import { maybeObjKey, objKey } from "./utils";
 import { pipe } from "fp-ts/lib/function";
-import { Validation } from "./types";
+import { ErrorResponse, Errors, NormalizedHandlerEvent, Validation } from "./types";
 
 export {
     // utils
@@ -18,27 +16,29 @@ export {
 
 //======================== Start implementation
 
-const multipleValidations = (response: Function) => (checks: Validation) => (input: any) => 
-    pipe(
-        checks,
-        A.flap(input),
-        A.lefts,
-        A.flatten,
-        result => result.length > 0
-            ? E.left(response(result))
-            : E.right(input)
-    );
+const multipleValidations = (response: (errors:Errors) => ErrorResponse) =>
+    (checks: Validation) =>
+        (data: any) => 
+            pipe(
+                checks,
+                A.flap(data),
+                A.lefts,
+                A.flatten,
+                result => result.length > 0
+                    ? E.left(response(result))
+                    : E.right(data)
+            );
 
 const multipleValidations400 = multipleValidations(respond400);
 
-const requiredField = (field: string) => (event: HandlerEvent) =>
+const requiredField = (field: string) => (event: NormalizedHandlerEvent) =>
     pipe(
         event,
         maybeObjKey(field),
         E.fromOption(() => [{ key: 'missing-field', field: field, developer_details: `Request is missing required field: ${field}.` }]),
     );
 
-const requiredFieldOfType = (field: string) => (type: string) => (event: HandlerEvent) =>
+const requiredFieldOfType = (field: string) => (type: string) => (event: NormalizedHandlerEvent) =>
     pipe(
         event,
         requiredField(field),
@@ -56,7 +56,7 @@ const requiredStringField = (field: string) => requiredFieldOfType(field)('strin
 const isRegExMatch = 
     (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
         (field: string) => 
-            (event: HandlerEvent) =>
+            (event: NormalizedHandlerEvent) =>
                 pipe(
                     event,
                     requiredStringField(field),

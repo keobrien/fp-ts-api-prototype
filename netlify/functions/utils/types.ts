@@ -17,6 +17,9 @@ export declare type Response = {
     headers?: { [header: string]: string | number | boolean; }
 }
 
+export interface ErrorResponse extends Response {
+}
+
 export declare type User = {
     id: number;
     username: string;

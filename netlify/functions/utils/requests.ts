@@ -3,7 +3,7 @@ import * as O from 'fp-ts/Option';
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { respond400, respond404 } from "./responses";
-import { Response } from "./types";
+import { ErrorResponse, NormalizedHandlerEvent } from "./types";
 
 export {
     processPostRequest,
@@ -12,14 +12,14 @@ export {
 
 //======================== Start implementation
 
-const processPostRequest = (event: HandlerEvent): E.Either<Response, HandlerEvent> =>
+const processPostRequest = (event: HandlerEvent): E.Either<ErrorResponse, NormalizedHandlerEvent> =>
     pipe(
         E.right(event),
         E.chain(isAllowedType),
         E.chain(decodeBody)
     );
 
-const isAllowedType = (event: HandlerEvent): E.Either<Response, HandlerEvent> =>
+const isAllowedType = (event: HandlerEvent): E.Either<ErrorResponse, HandlerEvent> =>
     pipe(
         event?.headers['content-type'] || '',
         normalizeContentTypeHeader,
@@ -45,7 +45,7 @@ const maybeStringIncludes = (expected: string) => (fullString: string): O.Option
         ? O.some(fullString)
         : O.none;
 
-const decodeBody = (event: HandlerEvent): E.Either<Response, HandlerEvent> =>
+const decodeBody = (event: HandlerEvent): E.Either<ErrorResponse, HandlerEvent> =>
     E.tryCatch(
         () => { event.body = JSON.parse(event.body); return event },
         error => respond400([{ key: 'request-body-json', developer_details: `Unable to parse request body json: ${error}` }])

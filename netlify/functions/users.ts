@@ -2,7 +2,7 @@ import type { Handler, HandlerEvent } from "@netlify/functions";
 import { chain, match, right, left } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { handleHttpMethods, isRegExMatch, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200 } from "./utils/utils";
-import { User } from "./utils/types";
+import { NormalizedHandlerEvent, User } from "./utils/types";
 const users = require("./data/users.json");
 
 export const handler: Handler = handleHttpMethods({
@@ -27,7 +27,7 @@ export const handler: Handler = handleHttpMethods({
         ),
         match(
             (error) => error,
-            event => respond200({
+            _ => respond200({
                 'id': 0
             })
         )
@@ -37,7 +37,7 @@ export const handler: Handler = handleHttpMethods({
 const isPasswordMatch = (pattern: RegExp, errorDetails?: object, errorKey?: string) => 
     isRegExMatch(pattern, errorDetails, errorKey)('body.password');
 
-const uniqueUsername = (event: Event) =>
+const uniqueUsername = (event: NormalizedHandlerEvent) =>
     users.find((user: User) => user.username === objKey('body.username')(event))
         ? left([{ key: 'username-not-unique', field: 'username', developer_details: `Username must be unique.` }])
         : right(event);
