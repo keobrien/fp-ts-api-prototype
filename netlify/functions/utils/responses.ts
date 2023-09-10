@@ -13,25 +13,31 @@ export {
 }
 
 //======================== Start implementation
+const error = (error: Response) => error;
 
-const respond = (statusCode:number) => (content:any = null): Response => {
-    if(content === null) return { statusCode: statusCode };
-    content.server_info = { version: process.env.npm_package_version };
+const respond = (statusCode:number) => (content:any = {}): Response => {
+    content.server_info = {
+        version: process.env.npm_package_version
+    };
     return {
         statusCode: statusCode,
         body: JSON.stringify(content),
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        },
     };
 }
 
-const respondWithErrors = (statusCode:number) => (errors:Errors = null) => 
-    errors ? respond(statusCode)({ errors }) : respond(statusCode)();
+const respondWithErrors = (statusCode:number) =>
+    (errors:Errors = []) => 
+        respond(statusCode)({ errors: errors });
 
-const respond200 = (content: Object) => respond(200)({ data: content });
+const respond200 = (content: Object) =>
+    respond(200)({ data: content });
+
 const respond400 = respondWithErrors(400);
 const respond401 = respondWithErrors(401);
 const respond403 = respondWithErrors(403);
 const respond404 = respondWithErrors(404);
 const respond500 = respondWithErrors(500);
 const respond503 = respondWithErrors(503);
-const error = (error: Response) => error;
