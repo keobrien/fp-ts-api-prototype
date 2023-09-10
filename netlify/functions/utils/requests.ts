@@ -16,7 +16,7 @@ const processPostRequest = (event: HandlerEvent): E.Either<ErrorResponse, Normal
     pipe(
         E.right(event),
         E.chain(isAllowedType),
-        E.chain(decodeBody)
+        E.chain(decodeBody),
     );
 
 const isAllowedType = (event: HandlerEvent): E.Either<ErrorResponse, HandlerEvent> =>
@@ -45,7 +45,7 @@ const maybeStringIncludes = (expected: string) => (fullString: string): O.Option
         ? O.some(fullString)
         : O.none;
 
-const decodeBody = (event: HandlerEvent): E.Either<ErrorResponse, HandlerEvent> =>
+const decodeBody = (event: HandlerEvent): E.Either<ErrorResponse, NormalizedHandlerEvent> =>
     E.tryCatch(
         () => { event.body = JSON.parse(event.body); return event },
         error => respond400([{ key: 'request-body-json', developer_details: `Unable to parse request body json: ${error}` }])

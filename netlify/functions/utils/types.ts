@@ -9,16 +9,15 @@ export declare type Error = {
 }
 export declare type Errors = Array<Error>;
 
-export declare type Validation = Array<(a: any) => Either<Errors, any>>;
+export declare type Validators = Array<(data: any) => Either<Errors, any>>;
 
 export declare type Response = {
     statusCode: number;
     body?: string;
     headers?: { [header: string]: string | number | boolean; }
 }
-
-export interface ErrorResponse extends Response {
-}
+export interface SuccessResponse extends Response {}
+export interface ErrorResponse extends Response {}
 
 export declare type User = {
     id: number;

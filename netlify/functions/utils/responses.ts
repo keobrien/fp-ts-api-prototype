@@ -1,4 +1,4 @@
-import { ErrorResponse, Errors, Response } from "./types";
+import { ErrorResponse, Errors, Response, SuccessResponse } from "./types";
 
 export {
     respond,
@@ -32,7 +32,7 @@ const respondWithErrors = (statusCode:number) =>
     (errors:Errors = []): ErrorResponse => 
         respond(statusCode)({ errors: errors });
 
-const respond200 = (content: Object) =>
+const respond200 = (content: Object): SuccessResponse =>
     respond(200)({ data: content });
 
 const respond400 = respondWithErrors(400);
