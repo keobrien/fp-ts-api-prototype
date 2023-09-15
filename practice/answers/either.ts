@@ -7,12 +7,12 @@ pipe(
     E.of(password),
     E.chain(requirePasswordString),
     E.chain(multipleValidations([
-        requirePasswordMin10,
-        requirePasswordMax25,
-        requireRegExpMatch(/[a-z]{2,}/, 'Password have at least 2 or more lowercase letters.'),
-        requireRegExpMatch(/[A-Z]{2,}/, 'Password have at least 2 or more upper letters.'),
-        requireRegExpMatch(/[^a-zA-Z\d]{2,}/, 'Password have at least 2 or more special characters.'),
-        requireRegExpMatch(/[\d]{2,}/, 'Password have at least 2 or more numbers.'),
+        minLength10,
+        maxLength25,
+        min2LowerLetters,
+        min2UpperLetters,
+        min2SpecialCharacters,
+        min2Numbers,
     ])),
     E.match(
         (errors) => errors,
@@ -41,15 +41,39 @@ const requirePasswordString = (value:any) =>
         ? E.right(value)
         : E.left(['Password is required.']);
 
-const requirePasswordMin10 = (value:string) =>
-    hasMinStringLength(10)(value)
-        ? E.right(value)
+const minLength10 = (input) =>
+    hasMinStringLength(10)(input)
+        ? E.right(input)
         : E.left(['Password must be at least 10 characters long.']);
-
-const requirePasswordMax25 = (value:string) =>
-    hasMaxStringLength(25)(value)
-        ? E.right(value)
+    
+const maxLength25 = (input) =>
+    hasMaxStringLength(25)(input)
+        ? E.right(input)
         : E.left(['Password must not be longer than 25 characters.']);
+
+const min2LowerLetters = (input) =>
+    pipe(
+        input,
+        requireRegExpMatch(/[a-z]{2,}/, 'Password have at least 2 or more lowercase letters.'),
+    );
+
+const min2UpperLetters = (input) =>
+    pipe(
+        input,
+        requireRegExpMatch(/[A-Z]{2,}/, 'Password have at least 2 or more upper letters.'),
+    );
+
+const min2SpecialCharacters = (input) =>
+    pipe(
+        input,
+        requireRegExpMatch(/[^a-zA-Z\d]{2,}/, 'Password have at least 2 or more special characters.'),
+    );
+
+const min2Numbers = (input) =>
+    pipe(
+        input,
+        requireRegExpMatch(/[\d]{2,}/, 'Password have at least 2 or more numbers.'),
+    );
 
 const requireRegExpMatch = (match:RegExp, message:string) =>
     (value:string) =>
