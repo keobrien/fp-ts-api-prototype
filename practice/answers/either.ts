@@ -52,28 +52,16 @@ const maxLength25 = (input) =>
         : E.left(['Password must not be longer than 25 characters.']);
 
 const min2LowerLetters = (input) =>
-    pipe(
-        input,
-        requireRegExpMatch(/[a-z]{2,}/, 'Password have at least 2 or more lowercase letters.'),
-    );
+    requireRegExpMatch(/[a-z]{2,}/, 'Password have at least 2 or more lowercase letters.')(input);
 
 const min2UpperLetters = (input) =>
-    pipe(
-        input,
-        requireRegExpMatch(/[A-Z]{2,}/, 'Password have at least 2 or more upper letters.'),
-    );
+    requireRegExpMatch(/[A-Z]{2,}/, 'Password have at least 2 or more upper letters.')(input);
 
 const min2SpecialCharacters = (input) =>
-    pipe(
-        input,
-        requireRegExpMatch(/[^a-zA-Z\d]{2,}/, 'Password have at least 2 or more special characters.'),
-    );
+    requireRegExpMatch(/[^a-zA-Z\d]{2,}/, 'Password have at least 2 or more special characters.')(input);
 
 const min2Numbers = (input) =>
-    pipe(
-        input,
-        requireRegExpMatch(/[\d]{2,}/, 'Password have at least 2 or more numbers.'),
-    );
+    requireRegExpMatch(/[\d]{2,}/, 'Password have at least 2 or more numbers.')(input);
 
 const requireRegExpMatch = (match:RegExp, message:string) =>
     (value:string) =>

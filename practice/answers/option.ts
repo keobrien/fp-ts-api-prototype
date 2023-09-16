@@ -42,7 +42,9 @@ const isNotNumber = (number:any): Boolean =>
     (typeof number !== 'number') || Number.isNaN(number);
 
 const allAreNumbers = (arrayOfNumbers:Array<any>): O.Option<Array<number>> =>
-    arrayOfNumbers.findIndex(isNotNumber) === -1 ? O.some(arrayOfNumbers) : O.none;
+    arrayOfNumbers.findIndex(isNotNumber) === -1
+        ? O.some(arrayOfNumbers)
+        : O.none;
     
 const addAll = (arrayOfNumbers:Array<number>): number =>
     arrayOfNumbers.reduce(add);
