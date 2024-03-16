@@ -1,7 +1,9 @@
 import 'jest';
 import * as E from "fp-ts/lib/Either";
-import { authenticateUser } from '../auth-login';
-import users from "../data/users.json";
+import { authenticateUser } from '../auth-login/auth-login';
+import users from "../../data/users.json";
+
+export default {};
 
 /**
  * Tests auth-login
@@ -10,8 +12,8 @@ import users from "../data/users.json";
     test('result', () => {
         const request = mockApiRequest();
         request.body = {
-            username: 'admin',
-            password: 'pass123'
+            username: 'mockUser1',
+            password: 'example'
         }
         const result = authenticateUser(request);
         

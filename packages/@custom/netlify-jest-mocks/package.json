@@ -1,0 +1,5 @@
+{
+    "name": "@custom/netlify-jest-mocks",
+    "version": "1.0.0",
+    "main": "netlify-jest-mocks.ts"
+}

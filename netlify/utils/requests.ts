@@ -4,6 +4,7 @@ import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { respond400, respond404 } from "./responses";
 import { ErrorResponse, NormalizedHandlerEvent } from "./types";
+import { log } from "./utils";
 
 export {
     processPostRequest,
@@ -34,11 +35,13 @@ const isAllowedType = (event: HandlerEvent): E.Either<ErrorResponse, HandlerEven
         ),
     );
 
-const normalizeContentTypeHeader = (header: string): O.Option<string> =>
-    typeof header === 'string'
+const normalizeContentTypeHeader = (header: string): O.Option<string> => {
+    console.info('header', header);
+    return typeof header === 'string'
     && header.length > 0
         ? O.some(header.toLocaleLowerCase())
         : O.none;
+}
 
 const maybeStringIncludes = (expected: string) => (fullString: string): O.Option<string> =>
     fullString.includes(expected)

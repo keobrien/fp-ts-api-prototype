@@ -2,9 +2,9 @@ import type { Handler, HandlerEvent } from "@netlify/functions";
 import { chain, match, left, right } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { faker } from '@faker-js/faker';
-import { error, handleHttpMethods, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, respond401 } from "./utils/utils";
-import { NormalizedHandlerEvent, User } from "./utils/types";
-import users from "./data/users.json";
+import { error, handleHttpMethods, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, respond401 } from "../../utils/utils";
+import { NormalizedHandlerEvent, User } from "../../utils/types";
+import users from "../../data/users.json";
 
 export const handler: Handler = handleHttpMethods({
     post: (event: HandlerEvent) => pipe(

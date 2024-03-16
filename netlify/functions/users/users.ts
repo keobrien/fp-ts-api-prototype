@@ -1,11 +1,11 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
 import { chain, match, right, left } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { handleHttpMethods, isRegExMatch, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200 } from "./utils/utils";
-import { NormalizedHandlerEvent, User } from "./utils/types";
-const users = require("./data/users.json");
+import { handleHttpMethods, isRegExMatch, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200 } from "../../utils/utils";
+import { NormalizedHandlerEvent, User } from "../../utils/types";
+const users = require("../../data/users.json");
 
-export const handler: Handler = handleHttpMethods({
+export const handler = handleHttpMethods({
     post: (event: HandlerEvent) => pipe(
         right(event),
         chain(processPostRequest),
