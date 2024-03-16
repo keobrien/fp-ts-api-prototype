@@ -16,9 +16,8 @@ export default {};
                 password: 'TEst1234!@#$aaa'
             })
         });
-        console.info(event)
         const result = await handler(event);
-        
+
         expect(result.statusCode).toBe(200);
         expect(result.body).toBe("{\"data\":{\"id\":0},\"server_info\":{\"version\":\"0.0.1\"}}");
     });

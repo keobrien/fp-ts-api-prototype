@@ -3,7 +3,7 @@ import * as O from 'fp-ts/Option';
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { respond400, respond404 } from "./responses";
-import { ErrorResponse, NormalizedHandlerEvent } from "./types";
+import { ErrorResponse, NormalizedHandlerEvent, SuccessResponse } from "./types";
 
 export {
     processPostRequest,
@@ -53,7 +53,7 @@ const decodeBody = (event: HandlerEvent): E.Either<ErrorResponse, NormalizedHand
         error => respond400([{ key: 'request-body-json', developer_details: `Unable to parse request body json: ${error}` }])
     );
 
-const handleHttpMethods = (handlers) => async (event: HandlerEvent) => 
+const handleHttpMethods = (handlers) => async (event: HandlerEvent):Promise<ErrorResponse|SuccessResponse> => 
     pipe(
         E.right(event),
         E.chain(event => E.right(event.httpMethod.toLowerCase())),

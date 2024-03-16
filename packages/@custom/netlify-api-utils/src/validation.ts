@@ -3,7 +3,7 @@ import * as A from "fp-ts/lib/Array";
 import { respond400 } from "./responses";
 import { maybeObjKey, objKey } from "./find";
 import { pipe } from "fp-ts/lib/function";
-import { ErrorResponse, Errors, NormalizedHandlerEvent, Validators } from "./types";
+import { NormalizedHandlerEvent, ValidationHandler, Validators } from "./types";
 
 export {
     // utils
@@ -16,7 +16,7 @@ export {
 
 //======================== Start implementation
 
-const multipleValidations = (response: (errors:Errors) => ErrorResponse) =>
+const multipleValidations = (response:ValidationHandler) =>
     (checks: Validators) =>
         (data: any) => 
             pipe(

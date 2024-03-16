@@ -1,4 +1,4 @@
-import type { HandlerEvent } from "@netlify/functions";
+import type { HandlerEvent, HandlerResponse } from "@netlify/functions";
 import { Either } from "fp-ts/lib/Either";
 
 export declare type Error = {
@@ -9,21 +9,18 @@ export declare type Error = {
 }
 export declare type Errors = Array<Error>;
 
-export declare type Validators = Array<(data: any) => Either<Errors, any>>;
+export declare type Validator = (data: any) => Either<Errors, any>;
+export declare type Validators = Validator[];
+export declare type ValidationHandler = (errors:Errors) => ErrorResponse;
 
-export declare type Response = {
-    statusCode: number;
-    body?: string;
-    headers?: { [header: string]: string | number | boolean; }
+export interface SuccessResponse extends HandlerResponse {}
+export interface ErrorResponse extends HandlerResponse {}
+
+export interface SuccessResponseData<Data = {}> {
+    data: Data
 }
-export interface SuccessResponse extends Response {}
-export interface ErrorResponse extends Response {}
-
-export declare type User = {
-    id: number;
-    username: string;
-    password: string;
-    access_token: string;
+export interface ErrorResponseData {
+    errors: Errors
 }
 
 export interface NormalizedHandlerEvent extends Omit<HandlerEvent, 'body'> {

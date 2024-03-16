@@ -1,10 +1,11 @@
-import type { Handler, HandlerEvent } from "@netlify/functions";
+import type { HandlerEvent } from "@netlify/functions";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
-import { handleHttpMethods, isRegExMatch, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, NormalizedHandlerEvent, User } from "@custom/netlify-api-utils";
+import { handleHttpMethods, isRegExMatch, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, NormalizedHandlerEvent } from "@custom/netlify-api-utils";
+import { User } from "../../types";
 const users = require("../../data/users.json");
 
-export const handler:Handler = handleHttpMethods({
+export const handler = handleHttpMethods({
     post: (event: HandlerEvent) => pipe(
         event,
         processPostRequest,

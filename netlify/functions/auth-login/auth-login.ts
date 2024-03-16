@@ -1,11 +1,12 @@
-import type { Handler, HandlerEvent } from "@netlify/functions";
+import type { HandlerEvent } from "@netlify/functions";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { faker } from '@faker-js/faker';
-import { error, handleHttpMethods, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, respond401, NormalizedHandlerEvent, User } from "@custom/netlify-api-utils";
+import { error, handleHttpMethods, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, respond401, NormalizedHandlerEvent, ErrorResponse } from "@custom/netlify-api-utils";
 import users from "../../data/users.json";
+import { User } from "../../types";
 
-export const handler:Handler = handleHttpMethods({
+export const handler = handleHttpMethods({
     post: (event: HandlerEvent) => pipe(
         event,
         processPostRequest,
@@ -24,7 +25,7 @@ export const handler:Handler = handleHttpMethods({
     )
 });
 
-const generateUserProfile = (user) => 
+const generateUserProfile = (user:User) => 
     ({
         profile: {
             id: user.id,
@@ -35,7 +36,7 @@ const generateUserProfile = (user) =>
         refresh_token: faker.string.alphanumeric(16)
     })
 
-export const authenticateUser = (event: NormalizedHandlerEvent) => {
+export const authenticateUser = (event:NormalizedHandlerEvent):E.Either<ErrorResponse,User> => {
     const username = objKey('body.username')(event);
     const password = objKey('body.password')(event);
     const user:User = users.find((user: User) =>

@@ -1,4 +1,5 @@
-import { ErrorResponse, Errors, Response, SuccessResponse } from "./types";
+import type { HandlerResponse } from "@netlify/functions";
+import { ErrorResponse, ErrorResponseData, Errors, SuccessResponse, SuccessResponseData } from "./types";
 
 export {
     respond,
@@ -13,15 +14,15 @@ export {
 }
 
 //======================== Start implementation
-const error = (error: ErrorResponse) => error;
+const error = (error:ErrorResponse) => error;
 
-const respond = (statusCode:number) => (content:any = {}): Response => {
-    content.server_info = {
-        version: process.env.npm_package_version
-    };
+const respond = (statusCode:number) => (content:(SuccessResponseData|ErrorResponseData)): HandlerResponse => {
     return {
         statusCode: statusCode,
-        body: JSON.stringify(content),
+        body: JSON.stringify({
+            ...content,
+            server_info: { version: process.env.npm_package_version }
+        }),
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         },
@@ -29,10 +30,10 @@ const respond = (statusCode:number) => (content:any = {}): Response => {
 }
 
 const respondWithErrors = (statusCode:number) =>
-    (errors:Errors = []): ErrorResponse => 
+    (errors:Errors = []):ErrorResponse => 
         respond(statusCode)({ errors: errors });
 
-const respond200 = (content: Object): SuccessResponse =>
+const respond200 = (content: Object):SuccessResponse =>
     respond(200)({ data: content });
 
 const respond400 = respondWithErrors(400);
