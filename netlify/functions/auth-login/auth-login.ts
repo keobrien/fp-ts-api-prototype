@@ -4,7 +4,7 @@ import { pipe } from "fp-ts/lib/function";
 import { faker } from '@faker-js/faker';
 import { error, handleHttpMethods, objKey, processPostRequest, requiredStringField, respond200, respond401, NormalizedHandlerEvent, ErrorResponse, validateAllOrRespond400 } from "@custom/netlify-api-utils";
 import users from "../../data/users.json";
-import { User } from "../../types";
+import { User, UserProfile } from "../../types";
 
 export const handler = handleHttpMethods({
     post: (event: HandlerEvent) => pipe(
@@ -15,7 +15,7 @@ export const handler = handleHttpMethods({
             requiredStringField('body.password'),
         ])),
         E.chain(authenticateUser),
-        E.map(generateUserProfile),
+        E.map(generateLoginDetails),
         E.match(
             error,
             respond200
@@ -23,10 +23,17 @@ export const handler = handleHttpMethods({
     )
 });
 
-const generateUserProfile = (user:User) => 
+interface LoginSuccessResponse {
+    profile: UserProfile;
+    access_token: string;
+    refresh_token: string;
+}
+
+const generateLoginDetails = (user:User):LoginSuccessResponse => 
     ({
         profile: {
             id: user.id,
+            username: user.username,
             first_name: faker.person.firstName(),
             last_name: faker.person.lastName()
         },
