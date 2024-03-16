@@ -1,35 +1,39 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
-import { chain, match, left, right } from "fp-ts/lib/Either";
+import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { faker } from '@faker-js/faker';
 import { error, handleHttpMethods, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, respond401, NormalizedHandlerEvent, User } from "@custom/netlify-api-utils";
 import users from "../../data/users.json";
 
-export const handler: Handler = handleHttpMethods({
+export const handler:Handler = handleHttpMethods({
     post: (event: HandlerEvent) => pipe(
         event,
         processPostRequest,
-        chain(
+        E.chain(
             multipleValidations400([
                 requiredStringField('body.username'),
                 requiredStringField('body.password'),
             ])
         ),
-        chain(authenticateUser),
-        match(
+        E.chain(authenticateUser),
+        E.map(generateUserProfile),
+        E.match(
             error,
-            user => respond200({
-                profile: {
-                    id: user.id,
-                    first_name: faker.person.firstName(),
-                    last_name: faker.person.lastName()
-                },
-                access_token: user.access_token,
-                refresh_token: faker.string.alphanumeric(16)
-            })
+            respond200
         )
     )
 });
+
+const generateUserProfile = (user) => 
+    ({
+        profile: {
+            id: user.id,
+            first_name: faker.person.firstName(),
+            last_name: faker.person.lastName()
+        },
+        access_token: user.access_token,
+        refresh_token: faker.string.alphanumeric(16)
+    })
 
 export const authenticateUser = (event: NormalizedHandlerEvent) => {
     const username = objKey('body.username')(event);
@@ -40,8 +44,8 @@ export const authenticateUser = (event: NormalizedHandlerEvent) => {
     );
     
     return user
-        ? right(user)
-        : left(respond401([{
+        ? E.right(user)
+        : E.left(respond401([{
             key: 'user-not-found',
             developer_details: `username "${username}" and password combination not found.`
         }]));

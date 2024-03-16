@@ -1,20 +1,20 @@
 import type { Handler, HandlerEvent } from "@netlify/functions";
-import { chain, match, right, left } from "fp-ts/lib/Either";
+import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { handleHttpMethods, isRegExMatch, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, NormalizedHandlerEvent, User } from "@custom/netlify-api-utils";
 const users = require("../../data/users.json");
 
-export const handler = handleHttpMethods({
+export const handler:Handler = handleHttpMethods({
     post: (event: HandlerEvent) => pipe(
-        right(event),
-        chain(processPostRequest),
-        chain(
+        event,
+        processPostRequest,
+        E.chain(
             multipleValidations400([
                 requiredStringField('body.username'),
                 requiredStringField('body.password'),
             ])
         ),
-        chain(
+        E.chain(
             multipleValidations400([
                 isPasswordMatch(/[a-z]{2,}/, { min: 2 }, 'password-lower'),
                 isPasswordMatch(/[A-Z]/, { min: 1 }, 'password-upper'),
@@ -24,7 +24,7 @@ export const handler = handleHttpMethods({
                 uniqueUsername,
             ])
         ),
-        match(
+        E.match(
             (error) => error,
             _ => respond200({
                 'id': 0
@@ -38,5 +38,5 @@ const isPasswordMatch = (pattern: RegExp, errorDetails?: object, errorKey?: stri
 
 const uniqueUsername = (event: NormalizedHandlerEvent) =>
     users.find((user: User) => user.username === objKey('body.username')(event))
-        ? left([{ key: 'username-not-unique', field: 'username', developer_details: `Username must be unique.` }])
-        : right(event);
+        ? E.left([{ key: 'username-not-unique', field: 'username', developer_details: `Username must be unique.` }])
+        : E.right(event);
