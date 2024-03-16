@@ -4,7 +4,6 @@ import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { respond400, respond404 } from "./responses";
 import { ErrorResponse, NormalizedHandlerEvent } from "./types";
-import { log } from "./utils";
 
 export {
     processPostRequest,

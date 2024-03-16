@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@custom/netlify-api-utils": "file:packages/@custom/netlify-api-utils",
     "@custom/netlify-jest-mocks": "file:packages/@custom/netlify-jest-mocks",
     "@netlify/functions": "^2.6.0",
     "fp-ts": "^2.16.3",
