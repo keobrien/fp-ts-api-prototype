@@ -1,9 +1,10 @@
 import type { HandlerResponse } from "@netlify/functions";
-import { ErrorResponse, ErrorResponseData, Errors, SuccessResponse, SuccessResponseData } from "./types";
+import { ErrorResponse, ErrorResponseData, ErrorResponseHandler, Errors, SuccessResponse, SuccessResponseData } from "./types";
 
 export {
     respond,
     respond200,
+    respondWithErrors,
     respond400,
     respond401,
     respond403,
@@ -29,7 +30,7 @@ const respond = (statusCode:number) => (content:(SuccessResponseData|ErrorRespon
     };
 }
 
-const respondWithErrors = (statusCode:number) =>
+const respondWithErrors = (statusCode:number):ErrorResponseHandler =>
     (errors:Errors = []):ErrorResponse => 
         respond(statusCode)({ errors: errors });
 

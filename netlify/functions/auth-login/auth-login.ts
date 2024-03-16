@@ -2,7 +2,7 @@ import type { HandlerEvent } from "@netlify/functions";
 import * as E from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { faker } from '@faker-js/faker';
-import { error, handleHttpMethods, multipleValidations400, objKey, processPostRequest, requiredStringField, respond200, respond401, NormalizedHandlerEvent, ErrorResponse } from "@custom/netlify-api-utils";
+import { error, handleHttpMethods, objKey, processPostRequest, requiredStringField, respond200, respond401, NormalizedHandlerEvent, ErrorResponse, validateAllOrRespond400 } from "@custom/netlify-api-utils";
 import users from "../../data/users.json";
 import { User } from "../../types";
 
@@ -10,12 +10,10 @@ export const handler = handleHttpMethods({
     post: (event: HandlerEvent) => pipe(
         event,
         processPostRequest,
-        E.chain(
-            multipleValidations400([
-                requiredStringField('body.username'),
-                requiredStringField('body.password'),
-            ])
-        ),
+        E.chain(validateAllOrRespond400([
+            requiredStringField('body.username'),
+            requiredStringField('body.password'),
+        ])),
         E.chain(authenticateUser),
         E.map(generateUserProfile),
         E.match(

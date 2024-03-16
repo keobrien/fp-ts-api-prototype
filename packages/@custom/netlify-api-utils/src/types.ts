@@ -9,9 +9,9 @@ export declare type Error = {
 }
 export declare type Errors = Array<Error>;
 
-export declare type Validator = (data: any) => Either<Errors, any>;
+export declare type Validator<Data={}> = (data:Data) => Either<Errors, Data>;
 export declare type Validators = Validator[];
-export declare type ValidationHandler = (errors:Errors) => ErrorResponse;
+export declare type ErrorResponseHandler = (errors:Errors) => ErrorResponse;
 
 export interface SuccessResponse extends HandlerResponse {}
 export interface ErrorResponse extends HandlerResponse {}

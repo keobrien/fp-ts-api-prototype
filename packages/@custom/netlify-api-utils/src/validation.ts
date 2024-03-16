@@ -1,14 +1,16 @@
 import * as E from "fp-ts/lib/Either";
 import * as A from "fp-ts/lib/Array";
-import { respond400 } from "./responses";
+import { respond400, respond401, respond404 } from "./responses";
 import { maybeObjKey, objKey } from "./find";
-import { pipe } from "fp-ts/lib/function";
-import { NormalizedHandlerEvent, ValidationHandler, Validators } from "./types";
+import { flow, pipe } from "fp-ts/lib/function";
+import { ErrorResponse, ErrorResponseHandler, Errors, NormalizedHandlerEvent, Validator, Validators } from "./types";
 
 export {
     // utils
-    multipleValidations,
-    multipleValidations400,
+    validateAll,
+    validateAllOrRespond400,
+    validateAllOrRespond401,
+    validateAllOrRespond404,
     // generic fields
     requiredStringField,
     isRegExMatch
@@ -16,20 +18,33 @@ export {
 
 //======================== Start implementation
 
-const multipleValidations = (response:ValidationHandler) =>
-    (checks: Validators) =>
-        (data: any) => 
+const validateAll =
+    (checks:Validators) =>
+        (data:any):E.Either<Errors,any> => 
             pipe(
                 checks,
                 A.flap(data),
                 A.lefts,
                 A.flatten,
                 result => result.length > 0
-                    ? E.left(response(result))
+                    ? E.left(result)
                     : E.right(data)
             );
 
-const multipleValidations400 = multipleValidations(respond400);
+const validateAllResponse = (response:ErrorResponseHandler) =>
+    (checks: Validators) =>
+        (data: any):E.Either<ErrorResponse,any> => 
+            pipe(
+                validateAll(checks)(data),
+                E.match(
+                    errors => E.left(response(errors)),
+                    () =>  E.right(data)
+                )
+            );
+
+const validateAllOrRespond400 = validateAllResponse(respond400);
+const validateAllOrRespond401 = validateAllResponse(respond401);
+const validateAllOrRespond404 = validateAllResponse(respond404);
 
 const requiredField = (field: string) => (event: NormalizedHandlerEvent) =>
     pipe(
